@@ -1,15 +1,15 @@
 package com.zouaves.skooma.controller;
 
 import java.math.BigDecimal;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-import com.zouaves.skooma.entity.Echeance;
+import com.zouaves.skooma.entity.Echeancier;
 import com.zouaves.skooma.service.CalculService;
+import com.zouaves.skooma.utils.FinancialCalculUtils;
 
 @RestController
 public class CalculController {
@@ -17,13 +17,13 @@ public class CalculController {
     private final CalculService calculService;
     
     @Autowired
-    public CalculController(CalculService calculService){
+    public CalculController(CalculService calculService) {
         this.calculService = calculService;
     }
-
-    @GetMapping("/calcul/lineaire")
-    public List<Echeance> calculEmpruntLineaire(@RequestParam Long nbEcheance, BigDecimal montantEmprunt, BigDecimal taux){
-        return calculService.calcul(nbEcheance, montantEmprunt, taux);
+    
+    @GetMapping("/api/calcul/lineaire")
+    public Echeancier calculEmpruntLineaire(@RequestParam Long nbEcheance, BigDecimal montantEmprunt, BigDecimal taux, FinancialCalculUtils.PERIODE periodicite) {
+        return calculService.calcul(nbEcheance, montantEmprunt, taux, periodicite);
     }
-
+    
 }

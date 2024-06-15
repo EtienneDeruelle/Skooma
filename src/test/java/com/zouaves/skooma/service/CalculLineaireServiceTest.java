@@ -12,6 +12,8 @@ import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.zouaves.skooma.entity.Echeance;
+import com.zouaves.skooma.entity.Echeancier;
+import com.zouaves.skooma.utils.FinancialCalculUtils;
 
 @ExtendWith(MockitoExtension.class)
 public class CalculLineaireServiceTest {
@@ -24,10 +26,11 @@ public class CalculLineaireServiceTest {
         Long nbEcheance = 240L;
         double capital = 140000;
         
-        final List<Echeance> echeances = calculLineaireService.calcul(nbEcheance, BigDecimal.valueOf(capital), BigDecimal.valueOf(0.0144));
+        final Echeancier echeancier = calculLineaireService.calcul(nbEcheance, BigDecimal.valueOf(capital), BigDecimal.valueOf(1.44), FinancialCalculUtils.PERIODE.MENSUELLE);
         
-        assertThat(echeances).hasSize(nbEcheance.intValue());
-        assertThat(echeances.stream().map(Echeance::loyer).collect(Collectors.toList())).allMatch((montant) -> montant.doubleValue() == 671.71);
+        assertThat(echeancier.getEcheances()).hasSize(nbEcheance.intValue());
+        assertThat(echeancier.getEcheances().stream().map(Echeance::loyer).collect(Collectors.toList())).allMatch((montant) -> montant.doubleValue() == 671.71);
+        assertThat(echeancier.getTotalInteret()).isEqualTo(BigDecimal.valueOf(21209.60));
         //assertThat(echeances.stream().map(Echeance::capital).reduce(BigDecimal::add).get().doubleValue()).isEqualTo(capital);
     }
 }
